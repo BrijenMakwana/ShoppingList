@@ -2,9 +2,13 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons';
 
-const AddButton = () => {
+export type AddButtonProps = {
+  onPress: () => void;
+}
+
+const AddButton = (props: AddButtonProps) => {
   return (
-    <Pressable style={styles.container}>
+    <Pressable style={styles.container} onPress={props.onPress}>
         <Ionicons name="ios-add" size={24} color="black" />
         <Text style={styles.title}>Add new item</Text>
     </Pressable>
@@ -22,7 +26,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         flexDirection: "row",
         padding: 10,
-        borderRadius: 10
+        borderRadius: 10,
+        marginBottom: 20
     },
     title:{
         color: "#000",

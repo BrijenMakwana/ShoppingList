@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CheckBox from './CheckBox';
+
 
 export type ShoppingItemProps = {
   isChecked: boolean;
@@ -13,7 +14,10 @@ const ShoppingItem = (props: ShoppingItemProps) => {
   return (
     <View style={styles.container}>
         <CheckBox isChecked={isChecked} onPress={()=>setIsChecked(!isChecked)}/>
-        <Text style={styles.title}>{props.title}</Text>
+        <Text style={[styles.title,{
+          textDecorationLine: isChecked ? "line-through" : "none",
+          color: isChecked ? "#f1a200" : "#fff"
+        }]}>{props.title}</Text>
     </View>
   )
 }

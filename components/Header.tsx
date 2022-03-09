@@ -1,12 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Platform, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const Header = () => {
+export type HeaderProps = {
+    total: number;
+}
+
+const Header = (props: HeaderProps) => {
   return (
     <View style={styles.container}>
         <View style={styles.topContainer}>
             <Text style={styles.heading}>Shopping List</Text>
-            <Text style={styles.totalItems}>(7)</Text>
+            <Text style={styles.totalItems}>({props.total})</Text>
         </View>
         <Text style={styles.date}>Last modified: 30 Jun 2022 9:22 AM</Text> 
       
@@ -22,12 +26,14 @@ const styles = StyleSheet.create({
         // backgroundColor: "red"
     },
     topContainer:{
-        flexDirection: "row"
+        flexDirection: "row",
+        marginTop: Platform.OS === "android" ? 50 : 0
     },
     heading:{
         color: "#fff",
         fontSize: 40,
-        marginLeft: 10
+        marginLeft: 10,
+        
     },
     totalItems:{
         color: "#f1a200",
