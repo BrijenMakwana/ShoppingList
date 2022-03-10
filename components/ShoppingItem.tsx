@@ -4,6 +4,7 @@ import CheckBox from './CheckBox';
 
 
 export type ShoppingItemProps = {
+  id: string;
   isChecked: boolean;
   title: string;
 }
