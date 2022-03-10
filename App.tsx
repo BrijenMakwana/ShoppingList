@@ -68,6 +68,7 @@ export default function App() {
               id={item.id}
               title={item.data.title} 
               isChecked={item.data.isChecked}
+              onRefresh={getShoppingList}
             />
           }
           keyExtractor={item=> item.id}
