@@ -5,19 +5,22 @@ import AddButton from './components/AddButton';
 import Header from './components/Header';
 import ShoppingItem from './components/ShoppingItem';
 import { EvilIcons } from '@expo/vector-icons';
-import {db,collection, getDocs,addDoc,doc} from "./Config";
+import {db,collection, getDocs,addDoc,doc,query,where} from "./Config";
 import { LogBox } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [shoppingList,setShoppingList] = useState<any>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [newItem,setNewItem] = useState("");
+  const [uniqueId,setUniqueId] = useState("");
 
   let temp: any = [];
   LogBox.ignoreLogs(['Setting a timer for a long period of time'])
   
   const getShoppingList = async() => {
-    const shoppingCol = collection(db, 'Shopping');
+    // const shoppingCol = collection(db, 'Shopping');
+    const shoppingCol = query(collection(db, "Shopping"), where("uniqueId", "==", uniqueId));
     const shoppingSnapshot = await getDocs(shoppingCol);
     shoppingSnapshot.docs.map(doc => {
       const obj = {
@@ -34,6 +37,7 @@ export default function App() {
       const docRef = await addDoc(collection(db, "Shopping"), {
         title: newItem,
         isChecked: false,
+        uniqueId: uniqueId
       });
       if(Platform.OS === "android"){
         ToastAndroid.show(`${newItem} added`, ToastAndroid.SHORT);
@@ -49,8 +53,25 @@ export default function App() {
   const openModal = () => {
     setModalVisible(true);
   }
+
+  const generateId = async() => {
+    try {
+      const id = await AsyncStorage.getItem('id')
+      if(id !== null) {
+        setUniqueId(id);
+      }
+      else{
+        const newId = Math.random().toString();
+        setUniqueId(newId);
+        await AsyncStorage.setItem('id', uniqueId);
+      }
+    } catch(e) {
+      // error reading value
+    }
+  }
   
   useEffect(() => {
+    generateId();
     getShoppingList();
   }, [])
   
@@ -61,6 +82,7 @@ export default function App() {
       <StatusBar style="light" />
       <View style={styles.infoContainer}>
         <Header total={shoppingList.length}/>
+        <Text style={{color: "red"}}>{uniqueId}</Text>
         <FlatList
           data={shoppingList}
           renderItem={({item})=> 

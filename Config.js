@@ -8,13 +8,11 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  query,
+  where,
 } from "firebase/firestore";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAG-Lv_XYVz2uG7O4vjiq3wfym4R1vD46c",
-  authDomain: "shopping-list-bf455.firebaseapp.com",
-  projectId: "shopping-list-bf455",
-};
+const firebaseConfig = {};
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -28,4 +26,6 @@ export {
   doc,
   deleteDoc,
   updateDoc,
+  query,
+  where,
 };
