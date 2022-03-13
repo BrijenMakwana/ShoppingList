@@ -1,38 +1,30 @@
-import { Platform, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export type HeaderProps = {
     total: number;
+    onAllList: () => void;
+    onDeleteAll: () => void;
 }
 
-export type itemTrackingProps = {
-    text: string;
-    number: number;
-}
 
 const Header = (props: HeaderProps) => {
     const [date,setDate] = useState(new Date());
   return (
     <View style={styles.container}>
-        <View style={styles.topContainer}>
+        <Pressable style={styles.topContainer} onPress={props.onAllList}>
             <Text style={styles.heading}>Shopping List</Text>
             <Text style={styles.totalItems}>({props.total})</Text>
-        </View>
-        <Text style={styles.date}>Date: {date.toISOString().substring(0,10)}</Text> 
-        <ItemTracking text="Purchased" number={5}/>
-        <ItemTracking text="Remains" number={3}/>
-        
+            <Pressable style={styles.delete} onPress={props.onDeleteAll}>
+                <MaterialIcons name="delete" size={35} color="#FF6768" />
+            </Pressable>
+        </Pressable>
+        <Text style={styles.date}>Date: {date.toISOString().substring(0,10)}</Text>
     </View>
   )
 }
 
-const ItemTracking = (props: itemTrackingProps) => {
-    return(
-        <Text style={styles.tracking}>{props.text}: 
-            <Text style={{fontSize:25,color: "#D8E9A8"}}>({props.number})</Text>
-        </Text>
-    )
-}
 
 export default Header
 
@@ -42,7 +34,9 @@ const styles = StyleSheet.create({
     },
     topContainer:{
         flexDirection: "row",
-        marginTop: Platform.OS === "android" ? 50 : 0
+        marginTop: Platform.OS === "android" ? 50 : 0,
+        // backgroundColor: "red",
+        alignItems: "center"
     },
     heading:{
         color: "#fff",
@@ -55,16 +49,16 @@ const styles = StyleSheet.create({
         fontSize: 40,
         marginLeft: 10
     },
+    delete:{
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 2,
+        marginLeft: 10
+      },
     date:{
         color: "#606060",
         fontSize: 17,
         marginTop: 15,
-        marginLeft: 10
-    },
-    tracking:{
-        color: "#fff",
-        fontSize: 20,
-        marginTop: 10,
         marginLeft: 10
     }
 })

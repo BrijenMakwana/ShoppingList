@@ -1,16 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, SafeAreaView, View, FlatList, ToastAndroid, Platform, Modal, TextInput, Pressable, ActivityIndicator } from 'react-native';
 import AddButton from './components/AddButton';
 import Header from './components/Header';
 import ShoppingItem from './components/ShoppingItem';
-import { EvilIcons } from '@expo/vector-icons';
-import {db,collection, getDocs,addDoc,doc,query,where} from "./Config";
+import { EvilIcons,Entypo } from '@expo/vector-icons';
+import {db,collection, getDocs,addDoc,doc,query,where,deleteDoc} from "./Config";
 import { LogBox } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [shoppingList,setShoppingList] = useState<any>([]);
+  const [totalItems,setTotalItems] = useState(0);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [newItem,setNewItem] = useState("");
   const [uniqueId,setUniqueId] = useState("");
@@ -43,9 +45,25 @@ export default function App() {
 
       const shoppingCol = query(collection(db, "Shopping"), where("uniqueId", "==", uniqueId));
       const shoppingSnapshot = await getDocs(shoppingCol);
+      setTotalItems(shoppingSnapshot.size);
       setShoppingList(shoppingSnapshot.docs.map((doc)=>({...doc.data(),id: doc.id})));
     
   }
+
+  const deleteShoppingList = async() => {
+
+    const shoppingCol = query(collection(db, "Shopping"), where("uniqueId", "==", uniqueId));
+    const shoppingSnapshot = await getDocs(shoppingCol);
+    shoppingSnapshot.docs.map((item)=>{
+      deleteDoc(doc(db, "Shopping", item.id))
+    });
+    if(Platform.OS === "android"){
+      ToastAndroid.show("All Items Deleted", ToastAndroid.SHORT);
+    }
+    
+    getShoppingList();
+}
+
 
   const addShoppingItem = async() => {
     try {
@@ -82,8 +100,11 @@ export default function App() {
     }]}>
       <StatusBar style="light" />
       <View style={styles.infoContainer}>
-        <Header total={shoppingList.length}/>
-        {shoppingList &&
+        <Header 
+          total={totalItems}
+          onAllList={getShoppingList} 
+          onDeleteAll={deleteShoppingList}
+        />
           <FlatList
           data={shoppingList}
           renderItem={({item})=> 
@@ -95,10 +116,16 @@ export default function App() {
             />
           }
           keyExtractor={item=> item.id}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Entypo name="shopping-cart" size={150} color="#D8E9A8" />
+            </View>
+            
+          }
           ListFooterComponent={
             <View style={{height: 20}}></View>
           }
-        />  }     
+        />    
       </View>
       <Modal
         animationType="slide"
@@ -153,6 +180,12 @@ const styles = StyleSheet.create({
   infoContainer:{
     flex: 1
   },
+  emptyContainer:{
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 200,
+    opacity: 0.5
+  },
   buttonContainer:{
 
   },
@@ -165,7 +198,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   button:{
-    backgroundColor: "#f1a200",
+    backgroundColor: "#D8E9A8",
     padding: 10,
     width: "30%",
     alignItems: "center",
