@@ -40,12 +40,12 @@ const ShoppingItem = (props: ShoppingItemProps) => {
         <CheckBox isChecked={isChecked} onPress={()=>setIsChecked(!isChecked)}/>
         <Text style={[styles.title,{
           textDecorationLine: isChecked ? "line-through" : "none",
-          color: isChecked ? "#f1a200" : "#fff"
+          color: isChecked ? "#D8E9A8" : "#fff"
         }]}>
           {props.title}
         </Text>
         <Pressable style={styles.delete} onPress={deleteShoppingItem}>
-          <MaterialIcons name="delete" size={24} color="#f1a200" />
+          <MaterialIcons name="delete" size={24} color="#FF6768" />
         </Pressable>
     </View>
   )
@@ -62,12 +62,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 13,
         alignItems: "center",
-        marginTop: 17
+        marginTop: 15
     },
     title:{
         color: "#fff",
         fontSize: 20,
-        flex: 1
+        flex: 1,
+        fontWeight: "500"
     },
     delete:{
       alignItems: "center",

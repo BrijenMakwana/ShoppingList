@@ -10,7 +10,7 @@ export type CheckBoxProps = {
 const CheckBox = (props: CheckBoxProps) => {
 
   const iconName = props.isChecked ? "radio-button-on" : "radio-button-off";
-  const iconColor = props.isChecked ? "#f1a200" : "#fff";
+  const iconColor = props.isChecked ? "#D8E9A8" : "#fff";
 
   return (
     <Pressable style={styles.container} onPress={props.onPress}>
@@ -23,6 +23,11 @@ export default CheckBox
 
 const styles = StyleSheet.create({
     container:{
-        marginRight: 10
+        marginRight: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        // backgroundColor: "red",
+        width: 35,
+        height:35
     }
 })

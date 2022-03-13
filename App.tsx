@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, SafeAreaView, View, FlatList, ToastAndroid, Platform, Modal, TextInput, Pressable } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, View, FlatList, ToastAndroid, Platform, Modal, TextInput, Pressable, ActivityIndicator } from 'react-native';
 import AddButton from './components/AddButton';
 import Header from './components/Header';
 import ShoppingItem from './components/ShoppingItem';
@@ -15,21 +15,36 @@ export default function App() {
   const [newItem,setNewItem] = useState("");
   const [uniqueId,setUniqueId] = useState("");
 
-  let temp: any = [];
-  LogBox.ignoreLogs(['Setting a timer for a long period of time'])
+  LogBox.ignoreLogs(['Setting a timer for a long period of time']);
+
+  const generateId = async() => {
+    try {
+      const id = await AsyncStorage.getItem('id')
+      if(id !== null) {
+        setUniqueId(id);
+        getShoppingList();
+      }
+      else{
+        const newId = Math.random().toString();
+        setUniqueId(newId);
+        await AsyncStorage.setItem('id', uniqueId);
+        
+      }
+      
+    } catch(e) {
+      // error reading value
+    }
+    finally{
+      
+    }
+  }
   
   const getShoppingList = async() => {
-    // const shoppingCol = collection(db, 'Shopping');
-    const shoppingCol = query(collection(db, "Shopping"), where("uniqueId", "==", uniqueId));
-    const shoppingSnapshot = await getDocs(shoppingCol);
-    shoppingSnapshot.docs.map(doc => {
-      const obj = {
-        id: doc.id,
-        data: doc.data()
-      }
-      temp.push(obj)
-      })
-      setShoppingList(temp);
+
+      const shoppingCol = query(collection(db, "Shopping"), where("uniqueId", "==", uniqueId));
+      const shoppingSnapshot = await getDocs(shoppingCol);
+      setShoppingList(shoppingSnapshot.docs.map((doc)=>({...doc.data(),id: doc.id})));
+    
   }
 
   const addShoppingItem = async() => {
@@ -52,28 +67,14 @@ export default function App() {
 
   const openModal = () => {
     setModalVisible(true);
+   
   }
 
-  const generateId = async() => {
-    try {
-      const id = await AsyncStorage.getItem('id')
-      if(id !== null) {
-        setUniqueId(id);
-      }
-      else{
-        const newId = Math.random().toString();
-        setUniqueId(newId);
-        await AsyncStorage.setItem('id', uniqueId);
-      }
-    } catch(e) {
-      // error reading value
-    }
-  }
-  
   useEffect(() => {
     generateId();
     getShoppingList();
-  }, [])
+  }, [uniqueId])
+
   
   return (
     <SafeAreaView style={[styles.container,{
@@ -82,14 +83,14 @@ export default function App() {
       <StatusBar style="light" />
       <View style={styles.infoContainer}>
         <Header total={shoppingList.length}/>
-        <Text style={{color: "red"}}>{uniqueId}</Text>
-        <FlatList
+        {shoppingList &&
+          <FlatList
           data={shoppingList}
           renderItem={({item})=> 
             <ShoppingItem 
               id={item.id}
-              title={item.data.title} 
-              isChecked={item.data.isChecked}
+              title={item.title} 
+              isChecked={item.isChecked}
               onRefresh={getShoppingList}
             />
           }
@@ -97,7 +98,7 @@ export default function App() {
           ListFooterComponent={
             <View style={{height: 20}}></View>
           }
-        />       
+        />  }     
       </View>
       <Modal
         animationType="slide"
@@ -119,13 +120,14 @@ export default function App() {
             height: "40%"
           }}>
             <Pressable style={{alignSelf: "flex-end",alignItems: "center",justifyContent: "center"}} onPress={()=>setModalVisible(false)}>
-              <EvilIcons name="close-o" size={30} color="#f1a200" />
+              <EvilIcons name="close-o" size={30} color="#D8E9A8" />
             </Pressable>
             
             <TextInput
               placeholder='add new item'
               value={newItem}
               onChangeText={(text)=>setNewItem(text)}
+              onSubmitEditing={addShoppingItem}
               style={styles.input}
               autoFocus
             />
@@ -146,7 +148,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#050504',
+    backgroundColor: '#323232',
   },
   infoContainer:{
     flex: 1

@@ -19,7 +19,7 @@ export default AddButton
 
 const styles = StyleSheet.create({
     container:{
-        backgroundColor: "#f1a200",
+        backgroundColor: "#D8E9A8",
         width: "90%",
         alignSelf: "center",
         alignItems: "center",
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     title:{
-        color: "#000",
+        color: "#323232",
         fontSize: 20,
         fontWeight: "700",
         marginLeft: 5
