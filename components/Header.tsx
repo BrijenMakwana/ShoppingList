@@ -10,16 +10,22 @@ export type HeaderProps = {
 
 
 const Header = (props: HeaderProps) => {
+    // store today's date
     const [date,setDate] = useState(new Date());
+
   return (
     <View style={styles.container}>
         <Pressable style={styles.topContainer} onPress={props.onAllList}>
+            {/* heading */}
             <Text style={styles.heading}>Shopping List</Text>
+            {/* total items in the list */}
             <Text style={styles.totalItems}>({props.total})</Text>
+            {/* delete button to delete all items */}
             <Pressable style={styles.delete} onPress={props.onDeleteAll}>
                 <MaterialIcons name="delete" size={35} color="#FF6768" />
             </Pressable>
         </Pressable>
+        {/* date */}
         <Text style={styles.date}>Date: {date.toISOString().substring(0,10)}</Text>
     </View>
   )
@@ -35,7 +41,6 @@ const styles = StyleSheet.create({
     topContainer:{
         flexDirection: "row",
         marginTop: Platform.OS === "android" ? 50 : 0,
-        // backgroundColor: "red",
         alignItems: "center"
     },
     heading:{

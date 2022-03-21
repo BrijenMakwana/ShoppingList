@@ -9,6 +9,7 @@ export type CheckBoxProps = {
 
 const CheckBox = (props: CheckBoxProps) => {
 
+  // change the following data based on isChecked property
   const iconName = props.isChecked ? "radio-button-on" : "radio-button-off";
   const iconColor = props.isChecked ? "#D8E9A8" : "#fff";
 
@@ -26,7 +27,6 @@ const styles = StyleSheet.create({
         marginRight: 10,
         alignItems: "center",
         justifyContent: "center",
-        // backgroundColor: "red",
         width: 35,
         height:35
     }

@@ -15,6 +15,7 @@ export type ShoppingItemProps = {
 const ShoppingItem = (props: ShoppingItemProps) => {
   const [isChecked,setIsChecked] = useState(props.isChecked);
 
+  // delete specific item
   const deleteShoppingItem = async() => {
     await deleteDoc(doc(db, "Shopping", props.id)).then(()=>{
       if(Platform.OS === "android"){
@@ -25,25 +26,30 @@ const ShoppingItem = (props: ShoppingItemProps) => {
     
   }
 
+  // update isChecked property
   const updateIsChecked = async() => {
     await updateDoc(doc(db, "Shopping", props.id),{
       isChecked: isChecked
     })
   }
 
+  // call function whenever isChecked property change
   useEffect(()=>{
     updateIsChecked();
   },[isChecked])
 
   return (
     <View style={styles.container}>
+      {/* checkbox component */}
         <CheckBox isChecked={isChecked} onPress={()=>setIsChecked(!isChecked)}/>
+        {/* title */}
         <Text style={[styles.title,{
           textDecorationLine: isChecked ? "line-through" : "none",
           color: isChecked ? "#D8E9A8" : "#fff"
         }]}>
           {props.title}
         </Text>
+        {/* delete button */}
         <Pressable style={styles.delete} onPress={deleteShoppingItem}>
           <MaterialIcons name="delete" size={24} color="#FF6768" />
         </Pressable>

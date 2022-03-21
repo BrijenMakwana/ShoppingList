@@ -10,15 +10,21 @@ import { LogBox } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
+  // store entire list
   const [shoppingList,setShoppingList] = useState<any>([]);
+  // total items in the list
   const [totalItems,setTotalItems] = useState(0);
 
+  // is modal visible or not for add new item
   const [modalVisible, setModalVisible] = useState(false);
+  // new item string
   const [newItem,setNewItem] = useState("");
+  // unique id for each smartphone
   const [uniqueId,setUniqueId] = useState("");
 
   LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 
+  // generate new id if not already present
   const generateId = async() => {
     try {
       const id = await AsyncStorage.getItem('id')
@@ -41,6 +47,7 @@ export default function App() {
     }
   }
   
+  // get entire list
   const getShoppingList = async() => {
 
       const shoppingCol = query(collection(db, "Shopping"), where("uniqueId", "==", uniqueId));
@@ -50,6 +57,7 @@ export default function App() {
     
   }
 
+  // delete entire list
   const deleteShoppingList = async() => {
 
     const shoppingCol = query(collection(db, "Shopping"), where("uniqueId", "==", uniqueId));
@@ -64,7 +72,7 @@ export default function App() {
     getShoppingList();
 }
 
-
+// add new item
   const addShoppingItem = async() => {
     try {
       const docRef = await addDoc(collection(db, "Shopping"), {
@@ -83,6 +91,7 @@ export default function App() {
     }
   }
 
+  // open new item modal
   const openModal = () => {
     setModalVisible(true);
    
@@ -100,11 +109,13 @@ export default function App() {
     }]}>
       <StatusBar style="light" />
       <View style={styles.infoContainer}>
+        {/* header */}
         <Header 
           total={totalItems}
           onAllList={getShoppingList} 
           onDeleteAll={deleteShoppingList}
         />
+        {/* list of items */}
           <FlatList
           data={shoppingList}
           renderItem={({item})=> 
@@ -127,6 +138,7 @@ export default function App() {
           }
         />    
       </View>
+      {/* modal for new item */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -146,10 +158,12 @@ export default function App() {
             borderTopRightRadius: 25,
             height: "40%"
           }}>
+            {/* close modal button */}
             <Pressable style={{alignSelf: "flex-end",alignItems: "center",justifyContent: "center"}} onPress={()=>setModalVisible(false)}>
               <EvilIcons name="close-o" size={30} color="#D8E9A8" />
             </Pressable>
             
+            {/* textinput for new otem */}
             <TextInput
               placeholder='add new item'
               value={newItem}
@@ -158,6 +172,7 @@ export default function App() {
               style={styles.input}
               autoFocus
             />
+            {/* add button */}
             <Pressable style={styles.button} onPress={addShoppingItem}>
               <Text style={styles.buttonText}>Add</Text>
             </Pressable>
@@ -165,6 +180,8 @@ export default function App() {
           
         </View>
       </Modal>
+
+      {/* button to open the modal */}
       <View style={styles.buttonContainer}>
         <AddButton onPress={openModal}/>
       </View>
