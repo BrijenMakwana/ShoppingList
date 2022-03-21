@@ -23,7 +23,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#D8E9A8"
-      }
+      },
+      "permissions" : [],
+      "package": "com.brijenmakwana.ShoppingCart"
     },
     "web": {
       "favicon": "./assets/favicon.png"
