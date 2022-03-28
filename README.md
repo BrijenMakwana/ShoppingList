@@ -2,7 +2,7 @@
 
 <img src="https://github.com/BrijenMakwana/ShoppingList/blob/main/assets/icon.png" width="200" height="200" style="border-radius:50px;">
 
-This project is a Mobile App to mange your shopping list. You can add new items for shopping, check or uncheck them and even delete it. All the data are stored in Firebase.
+This project is a Mobile App to mange your shopping list. You can add new items for shopping, check or uncheck them and even delete it. All the data are stored in Firebase. This project performs all the CRUD operation with Firebase Firestore.
 
 ***Download the app from [Play Store](https://play.google.com/store/apps/details?id=com.brijenmakwana.ShoppingCart)***
 
@@ -17,6 +17,7 @@ This project is a Mobile App to mange your shopping list. You can add new items 
 - You can delete items.
 - You get the total number of items present in your list.
 - Data will be stored in Firebase.
+- It performs all CRUD operations.
 
 ## Technology and Tools
 
